@@ -12,7 +12,6 @@ import com.example.aguela.repository.UserRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -29,13 +28,30 @@ public class UserController {
 
     @PostMapping
     public User newUser(@RequestBody UserRequest userRequest) {
-        //TODO: process POST request
         User newUser = new User();
+        newUser.setName(userRequest.getName());
         newUser.setColor(userRequest.getColor());
-        newUser.setName(userRequest.getColor());
-        
         return userRepository.save(newUser);
     }
-    
-}
 
+    // Endpoint para pre-poblar los 5 usuarios
+    @PostMapping("/seed")
+    public List<User> seedUsers() {
+        List<UserRequest> initialUsers = List.of(
+                new UserRequest("Tomas", "#f87171"),
+                new UserRequest("Raquel", "#60a5fa"),
+                new UserRequest("Sagra", "#34d399"),
+                new UserRequest("Mari", "#fbbf24"),
+                new UserRequest("Juan", "#a78bfa"));
+
+        return initialUsers.stream()
+                .map(req -> {
+                    User u = new User();
+                    u.setName(req.getName());
+                    u.setColor(req.getColor());
+                    return userRepository.save(u);
+                })
+                .toList();
+    }
+
+}
