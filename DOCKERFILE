@@ -5,6 +5,9 @@ WORKDIR /app
 # Copiamos todo el proyecto
 COPY . .
 
+# Damos permisos de ejecución al wrapper de Maven
+RUN chmod +x mvnw
+
 # Construimos el JAR con Maven
 RUN ./mvnw clean package -DskipTests
 
