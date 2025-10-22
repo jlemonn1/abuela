@@ -1,0 +1,18 @@
+FROM eclipse-temurin:21-jdk-alpine
+
+WORKDIR /app
+
+# Copiamos todo el proyecto
+COPY . .
+
+# Construimos el JAR con Maven
+RUN ./mvnw clean package -DskipTests
+
+# Renombramos cualquier JAR en target/ a app.jar
+RUN mv target/*.jar app.jar
+
+# Exponemos el puerto
+EXPOSE 8080
+
+# Ejecutamos el JAR renombrado
+CMD ["java", "-jar", "app.jar"]
